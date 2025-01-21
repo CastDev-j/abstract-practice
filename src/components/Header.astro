@@ -1,103 +1,175 @@
 ---
-import { SITE, LINKS } from "@consts"
-import { cn } from "@lib/utils"
-const { pathname } = Astro.url
-const subpath = pathname.match(/[^/]+/g)
-import Container from "@components/Container.astro"
+import { SITE } from "@consts";
+import type { CollectionEntry } from "astro:content";
+import { getCollection } from "astro:content";
+import Search from "./Search";
+import {
+  FaSearch,
+  FaArrowAltCircleUp,
+  FaArrowAltCircleDown,
+} from "react-icons/fa";
+import { MdClose } from "react-icons/md";
+import { IoMdSearch } from "react-icons/io";
+const { pathname } = Astro.url;
+
+const posts = (await getCollection("blog")).filter((post) => !post.data.draft);
+
+const projects = (await getCollection("projects")).filter(
+  (post) => !post.data.draft
+);
+const data = [...posts, ...projects] as CollectionEntry<"blog">[];
 ---
 
-<header id="header" class="fixed top-0 w-full h-16 z-50 ">
-  <Container size="md">
-    <div class="relative h-full w-full">
-      <div class="absolute left-0 top-1/2 -translate-y-1/2 flex gap-1 font-semibold">
-        <a href="/" class="flex gap-1 text-current hover:text-black dark:hover:text-white transition-colors duration-300 ease-in-out">
-          <svg class="size-6 fill-current">
-            <use href="/brand.svg#brand"></use>
-          </svg>
-          <div>
-            {SITE.TITLE}
-          </div>
-        </a>
-      </div>
-
-    <div class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
-      <nav class="hidden md:flex items-center justify-center text-sm gap-1">
-        {
-          LINKS.map((LINK) => (
-            <a href={LINK.HREF} class={cn("h-8 rounded-full px-3 text-current", "flex items-center justify-center", "transition-colors duration-300 ease-in-out", pathname === LINK.HREF || "/" + subpath?.[0] === LINK.HREF ? "bg-black dark:bg-white text-white dark:text-black" : "hover:bg-black/5 dark:hover:bg-white/20 hover:text-black dark:hover:text-white")}>
-              {LINK.TEXT}
-            </a>
-          ))
-        }
-      </nav>
+<div
+  id="search-input"
+  class="hidden absolute z-10 w-full h-20 p-3 bg-neutral-100 text-neutral-950 justify-center gap-6 items-center"
+>
+  <form  class="flex flex-col w-full max-w-md appear-animation" id="search-form-header">
+    <div class="relative">
+      <input
+        name="search"
+        id="search"
+        type="text"
+        autocomplete="off"
+        placeholder="What are you looking for?"
+        class="w-full px-4.5 py-2.5 pl-10 rounded outline-none border-2 border-neutral-950 text-neutral-600 focus:text-neutral-950"
+      />
+      <IoMdSearch
+        className="absolute size-6 left-1.5 top-1/2 -translate-y-1/2 stroke-current focus:text-neutral-950"
+      />
     </div>
+  </form>
+  <MdClose
+    id="close-search-input"
+    className="bg-neutral-950 size-6 rounded-full text-neutral-50 hover:bg-neutral-50 hover:text-neutral-950 transition-colors duration-100 ease-in cursor-pointer"
+  />
+</div>
 
-    <div class="buttons absolute right-0 top-1/2 -translate-y-1/2 flex gap-1">
-      <a href="/search" aria-label={`Search blog posts and projects on ${SITE.TITLE}`} class={cn("hidden md:flex", "size-9 rounded-full p-2 items-center justify-center", "bg-transparent hover:bg-black/5 dark:hover:bg-white/20", "stroke-current hover:stroke-black hover:dark:stroke-white", "border border-black/10 dark:border-white/25", "transition-colors duration-300 ease-in-out", pathname === "/search" || "/" + subpath?.[0] === "/search" ? "pointer-events-none bg-black dark:bg-white text-white dark:text-black" : "")}>
-        <svg class="size-full">
-          <use href="/ui.svg#search"></use>
-        </svg>
+<header
+  class="w-full h-20 p-3 bg-neutral-900 text-neutral-50 flex justify-between sm:px-12 items-center sm:h-14"
+>
+  <div class="flex gap-1">
+    <div
+      class="flex justify-start items-center gap-2 transition-colors duration-300 ease-in-out text-xl"
+    >
+      <a href="/">
+        <img src="/brand.svg" alt="logo" class="h-7" />
       </a>
-
-      <a href="/rss.xml" target="_blank" aria-label={`Rss feed for ${SITE.TITLE}`} class={cn("hidden md:flex", "size-9 rounded-full p-2 items-center justify-center", "bg-transparent hover:bg-black/5 dark:hover:bg-white/20", "stroke-current hover:stroke-black hover:dark:stroke-white", "border border-black/10 dark:border-white/25", "transition-colors duration-300 ease-in-out")}>
-        <svg class="size-full">
-          <use href="/ui.svg#rss"></use>
-        </svg>
+      <span class="w-0.5 h-full bg-slate-50"></span>
+      <a href="/" class="hover:underline">
+        {SITE.TITLE}
       </a>
-
-      <button id="header-theme-button" aria-label={`Toggle light and dark theme`} class={cn("hidden md:flex", "size-9 rounded-full p-2 items-center justify-center", "bg-transparent hover:bg-black/5 dark:hover:bg-white/20", "stroke-current hover:stroke-black hover:dark:stroke-white", "border border-black/10 dark:border-white/25", "transition-colors duration-300 ease-in-out")}>
-        <svg class="size-full block dark:hidden">
-          <use href="/ui.svg#sun"></use>
-        </svg>
-        <svg class="size-full hidden dark:block">
-          <use href="/ui.svg#moon"></use>
-        </svg>
-      </button>
-
-      <button id="header-drawer-button" aria-label={`Toggle drawer open and closed`} class={cn("flex md:hidden", "size-9 rounded-full p-2 items-center justify-center", "bg-transparent hover:bg-black/5 dark:hover:bg-white/20", "stroke-current hover:stroke-black hover:dark:stroke-white", "border border-black/10 dark:border-white/25", "transition-colors duration-300 ease-in-out")}>
-        <svg id="drawer-open" class="size-full">
-          <use href="/ui.svg#menu"></use>
-        </svg>
-        <svg id="drawer-close" class="size-full">
-          <use href="/ui.svg#x"></use>
-        </svg>
-      </button>
     </div>
   </div>
-  </Container>
+
+  <nav
+    class="hidden sm:flex items-center justify-center text-sm gap-2 font-semibold"
+  >
+    <a
+      href="/#"
+      class="px-2 py-1 rounded-md transition-colors duration-100 ease-in-out border-2 border-neutral-100 hover:bg-neutral-50 hover:text-neutral-950"
+    >
+      Submit a request
+    </a>
+
+    <a
+      href="/#"
+      class="px-2 py-1 rounded-md hover:bg-neutral-50 hover:text-neutral-950 hover:border-neutral-50 transition-colors duration-100 ease-in-out border-2 border-indigo-500 bg-indigo-500"
+    >
+      Sign in
+    </a>
+  </nav>
+
+  <nav class="flex sm:hidden items-center justify-center text-sm gap-2">
+    <button
+      class="text-xl rounded-full hover:scale-110 transition-transform duration-100 ease-in"
+      id="open-search-input"
+    >
+      <FaSearch />
+    </button>
+    <button class="text-2xl" id="header-drawer-button">
+      <div id="header-drawer-down-button">
+        <FaArrowAltCircleDown />
+      </div>
+      <div id="header-drawer-up-button" class="hidden">
+        <FaArrowAltCircleUp />
+      </div>
+    </button>
+  </nav>
 </header>
 
-<style>
-  #header-drawer-button > #drawer-open {
-    @apply block;
-  }
+<div
+  id="header-drawer"
+  class="bg-neutral-900 border-t border-neutral-100/50 text-neutral-50 flex justify-center w-full absolute top-20 z-20 overflow-hidden sm:top-14"
+  style="height: 0"
+>
+  <nav
+    class="flex flex-col items-center gap-4 p-4 py-12 text-xl w-1/2 text-center"
+  >
+    <a
+      href="/#"
+      class="hover:text-neutral-100/50 w-full transition-colors duration-300 ease-in-out"
+    >
+      Submit a request
+    </a>
 
-  #header-drawer-button > #drawer-close {
-    @apply hidden;
-  }
+    <hr class="w-full border-neutral-100/50" />
 
-  #header-drawer-button.open > #drawer-open {
-    @apply hidden;
-  }
-
-  #header-drawer-button.open > #drawer-close {
-    @apply block;
-  }
-</style>
+    <a
+      href="/#"
+      class="hover:text-neutral-100/50 w-full transition-colors duration-300 ease-in-out"
+    >
+      Sign in
+    </a>
+  </nav>
+</div>
 
 <script is:inline>
-  function toggleDrawer() {
-    const drawer = document.getElementById("drawer")
-    const drawerButton = document.getElementById("header-drawer-button")
-    drawer?.classList.toggle("open")
-    drawerButton?.classList.toggle("open")
-  }
+  document.addEventListener("astro:page-load", () => {
+    const headerDrawer = document.getElementById("header-drawer");
+    const headerDrawerButton = document.getElementById("header-drawer-button");
+    const headerDrawerUpButton = document.getElementById(
+      "header-drawer-up-button"
+    );
+    const headerDrawerDownButton = document.getElementById(
+      "header-drawer-down-button"
+    );
 
-  function initializeDrawerButton() {
-    const drawerButton = document.getElementById("header-drawer-button")
-    drawerButton?.addEventListener("click", toggleDrawer)
-  }
+    headerDrawerButton.addEventListener("click", () => {
+      headerDrawer.style.height =
+        headerDrawer.style.height === "0px" ? "auto" : "0";
+      headerDrawerUpButton.classList.toggle("hidden");
+      headerDrawerDownButton.classList.toggle("hidden");
+    });
 
-  document.addEventListener("astro:after-swap", initializeDrawerButton)
-  initializeDrawerButton()
+    const openSearchInput = document.getElementById("open-search-input");
+    const closeSearchInput = document.getElementById("close-search-input");
+
+    const searchInput = document.getElementById("search-input");
+
+    openSearchInput.addEventListener("click", () => {
+      searchInput.classList.remove("hidden");
+      searchInput.classList.add("flex");
+      headerDrawer.style.height = "0";
+      headerDrawerUpButton.classList.add("hidden");
+      headerDrawerDownButton.classList.remove("hidden");
+    });
+
+    closeSearchInput.addEventListener("click", () => {
+      searchInput.classList.add("hidden");
+      searchInput.classList.remove("flex");
+    });
+  });
+</script>
+
+<script is:inline>
+  document.addEventListener("astro:page-load", () => {
+    const searchForm = document.getElementById("search-form-header");
+
+    searchForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const searchInput = document.getElementById("search").value;
+      window.location.href = `/search?q=${searchInput}`;
+    });
+  });
 </script>

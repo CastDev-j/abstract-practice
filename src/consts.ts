@@ -1,8 +1,8 @@
-import type { Site, Page, Links, Socials } from "@types"
+import type { Site, Page, Links, Socials, Sections } from "@types"
 
 // Global
 export const SITE: Site = {
-  TITLE: "Astro Sphere",
+  TITLE: "Landing Page",
   DESCRIPTION: "Welcome to Astro Sphere, a portfolio and blog for designers and developers.",
   AUTHOR: "Mark Horn",
 }
@@ -51,31 +51,84 @@ export const LINKS: Links = [
   },
 ]
 
+// NavItems
+
+export const NAVLINKS: Links = [
+  { 
+    TEXT: "Submit a request", 
+    HREF: "/#", 
+  },
+  { 
+    TEXT: "Sign in", 
+    HREF: "/#", 
+  },
+]
+
 // Socials
 export const SOCIALS: Socials = [
   { 
     NAME: "Email",
     ICON: "email", 
-    TEXT: "markhorn.dev@gmail.com",
-    HREF: "mailto:markhorn.dev@gmail.com",
+    TEXT: "andres2004_cj@outlook.com",
+    HREF: "mailto:andres2004_cj@outlook.com",
   },
   { 
     NAME: "Github",
     ICON: "github",
-    TEXT: "markhorn-dev",
-    HREF: "https://github.com/markhorn-dev/astro-sphere"
+    TEXT: "CastDev-j",
+    HREF: "https://github.com/CastDev-j"
   },
   { 
     NAME: "LinkedIn",
     ICON: "linkedin",
-    TEXT: "markhorn-dev",
-    HREF: "https://www.linkedin.com/in/markhorn-dev/",
+    TEXT: "andres-castillo-jimenez",
+    HREF: "https://www.linkedin.com/in/andres-castillo-jimenez-249210292/",
   },
   { 
     NAME: "Twitter",
     ICON: "twitter-x",
-    TEXT: "markhorn_dev",
-    HREF: "https://twitter.com/markhorn_dev",
+    TEXT: "CastDev_J",
+    HREF: "https://x.com/CastDev_J",
   },
 ]
 
+// Sections
+export const SECTIONS: Sections = [
+  { 
+    TITLE: "Using Abstract",
+    DESCRIPTION: "Abstract lets you manage, version, and document your designs in one place.",
+    IMAGE_NAME: "icon-versions", 
+    HREF: "/#", 
+  },
+  { 
+    TITLE: "Manage your account",
+    DESCRIPTION: "Configure your account settings, such as your email, profile details, and password.",
+    IMAGE_NAME: "icon-account", 
+    HREF: "/#", 
+  },
+  { 
+    TITLE: "Manage organizations, teams, and projects",
+    DESCRIPTION: "Use Abstract organizations, teams, and projects to organize your people and your work.", 
+    IMAGE_NAME: "icon-organizations",
+    HREF: "/#", 
+  },
+  { 
+    TITLE: "Manage billing",
+    DESCRIPTION: "Change subscriptions and payment details.",
+    IMAGE_NAME: "icon-billing", 
+    HREF: "/#", 
+  },
+  { 
+    TITLE: "Authenticate to Abstract",
+    DESCRIPTION: "Set up and configure SSO, SCIM, and Just-in-Time provisioning.", 
+    IMAGE_NAME: "icon-authenticate",
+    HREF: "/#", 
+  },
+  { 
+    TITLE: "Abstract support",
+    DESCRIPTION: "Get in touch with a human.",
+    IMAGE_NAME: "icon-comment", 
+    HREF: "/#", 
+  },
+
+]
